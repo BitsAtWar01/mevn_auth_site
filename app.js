@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const PORT = 3000 || process.env.PORT;
@@ -15,6 +16,19 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 //Serving Up Static Files
 app.use(express.static(path.join(__dirname, 'public')))
+
+//Import Database Config
+const db = require('./config/keys').mongoURI;
+
+//Connect Database
+mongoose.connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log(`Database connected successfully ${db}`)
+}).catch(err =>{
+    console.log(`Unable to connect to the database ${err}`)
+});
 
 //Listen on Port
 app.listen(PORT, () => {
