@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
+const cors = require('cors');
+const passport = require('passport');
 const PORT = 3000 || process.env.PORT;
 
 //Initialize the app
@@ -16,6 +18,12 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 //Serving Up Static Files
 app.use(express.static(path.join(__dirname, 'public')))
+
+//Use Passport Middleware
+app.use(passport.initialize());
+//Bring in the strategy
+const passportStrategy = require('./config/passport');
+passportStrategy(passport);
 
 //Import Database Config
 const db = require('./config/keys').mongoURI;
