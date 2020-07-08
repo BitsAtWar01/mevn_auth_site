@@ -30,6 +30,11 @@ mongoose.connect(db, {
     console.log(`Unable to connect to the database ${err}`)
 });
 
+//Bring In User Routes
+const userRoutes = require('./routes/api/users');
+//add Users Routes 
+app.use('/api/users', userRoutes);
+
 //Listen on Port
 app.listen(PORT, () => {
     console.log(`Server Listening on port ${PORT}`)
