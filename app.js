@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({
 }))
 //Json Body Middleware
 app.use(bodyParser.json());
+//CORS Middleware
+app.use(cors());
 //Serving Up Static Files
 app.use(express.static(path.join(__dirname, 'public')))
 
