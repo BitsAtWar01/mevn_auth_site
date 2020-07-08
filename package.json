@@ -4,7 +4,8 @@
   "description": "An attempt to build a full-stack MEVN website which will be deployed on Heroku.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "server": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -17,8 +18,14 @@
   },
   "homepage": "https://github.com/BitsAtWar01/mevn_auth_site#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "concurrently": "^5.2.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.9.22"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.22",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0"
   }
 }
