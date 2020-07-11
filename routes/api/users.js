@@ -9,14 +9,14 @@ const userController = require('../../controllers/users');
  * @desc Register the user
  * @access Public
  */
-router.post('/register', userController.createUser);
+router.post('/register', userController.validators['register'], userController.createUser);
 
 /**
  * @route POST api/users/login
  * @desc Login the user
  * @access Public
  */
-router.post('/login', userController.loginUser);
+router.post('/login', userController.validators['login'], userController.loginUser);
 
 /**
  * @route POST api/users/profile
