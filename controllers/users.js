@@ -69,8 +69,8 @@ exports.validators = {
     ]
 }
 
+//PUBLIC CONTROLLERS
 //Create User Controller
-//CONVERT THIS TO EXPRESS VALIDATOR COMPATIBLE AS WELL
 exports.createUser = (req,res, next) => {
     //Validation Errors
     const errors = validationResult(req);
@@ -132,13 +132,82 @@ exports.loginUser = (req, res, next) => {
                 msg: "Yay! You are now Loggeg in."
             })
         });
-    })
+    }, (err) => next(err))
+    .catch(err => next(err));
 }
 
+//PRIVATE CONTROLLERS
 //Get Profile of User Controller
 exports.getUser = (req, res, next) => {
     //Send User
     return res.json({
         user: req.user
     })
+}
+
+//Delete user private Controller
+exports.deleteUserPrivate = (req, res, next) => {
+    User.deleteOne({_id: req.user._id}).then(resp => {
+        res.status(200).json(resp)
+    }, err => next(err))
+    .catch(err => next(err));
+}
+
+//ADMIN CONTROLLERS
+//Create Admin Account
+exports.createAdmin = (req,res, next) => {
+    //Validation Errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ 
+            errors: errors.array() 
+        });
+    }
+
+    // The data is valid & now we can Register the User
+    let newUser = new User({
+        name: req.body.name,
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        admin: req.body.admin
+    })
+    //Hash the password after generating a salt
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if(err) throw err;
+            else newUser.password = hash;
+            newUser.save().then(user => {
+                return res.status(201).json({
+                    success: true,
+                    msg: "Yay! User is now registered."
+                });
+            }).catch(err => {
+                console.log(err);
+            })
+        })
+    })
+}
+
+exports.getUsers = (req, res, next) => {
+    User.find({}).then(users => {
+        res.status(200).json(users);
+    }, err => next(err))
+    .catch(err => next(err));
+}
+
+//Delete user admin controller
+exports.deleteUserAdmin = (req, res, next) => {
+    User.deleteOne({_id: req.params.user_id}).then(resp => {
+        res.status(200).json(resp)
+    }, err => next(err))
+    .catch(err => next(err));
+}
+
+//Delete all Users Controller
+exports.deleteUsers = (req, res, next) => {
+    User.deleteMany({}).then(resp => {
+        res.status(200).json(resp)
+    }, err => next(err))
+    .catch(err => next(err));
 }

@@ -23,9 +23,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //Use Passport Middleware
 app.use(passport.initialize());
-//Bring in the strategy
-const passportStrategy = require('./config/passport');
-passportStrategy(passport);
 
 //Import Database Config
 const db = require('./config/keys').mongoURI;
