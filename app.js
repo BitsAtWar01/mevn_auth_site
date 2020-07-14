@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const passport = require('passport');
-const PORT = 3000 || process.env.PORT;
+
 
 //Initialize the app
 const app = express();
@@ -46,6 +46,8 @@ app.use('/api/users', userRoutes);
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
+
+const PORT = process.env.PORT || 3000 ;
 
 //Listen on Port
 app.listen(PORT, () => {
