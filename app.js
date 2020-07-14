@@ -42,6 +42,11 @@ const userRoutes = require('./routes/api/users');
 //add Users Routes 
 app.use('/api/users', userRoutes);
 
+//Handling other requests to the SPA
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
 //Listen on Port
 app.listen(PORT, () => {
     console.log(`Server Listening on port ${PORT}`)
