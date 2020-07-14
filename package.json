@@ -4,8 +4,11 @@
   "description": "An attempt to build a full-stack MEVN website which will be deployed on Heroku.",
   "main": "app.js",
   "scripts": {
+    "client-install": "npm install --prefix client",
     "start": "node app.js",
-    "server": "nodemon app.js"
+    "server": "nodemon app.js",
+    "client": "npm run serve --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
