@@ -1,11 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import About from '../views/About.vue'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import Profile from '../views/Profile.vue'
-import Admin from '../views/Admin.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -14,17 +8,17 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import('../views/Home.vue')
   },
   {
     path: '/about',
     name: 'About',
-    component: About
+    component: () => import('../views/About.vue')
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login,
+    component: () => import('../views/Login.vue'),
     meta: {
       requiresGuest: true
     }
@@ -32,7 +26,7 @@ Vue.use(VueRouter)
   {
     path: '/register',
     name: 'Register',
-    component: Register,
+    component: () => import('../views/Register.vue'),
     meta: {
       requiresGuest: true
     }
@@ -40,7 +34,7 @@ Vue.use(VueRouter)
   {
     path: '/profile',
     name: 'Profile',
-    component: Profile,
+    component: () => import('../views/Profile.vue'),
     meta: {
       requiresAuth: true
     }
@@ -48,7 +42,7 @@ Vue.use(VueRouter)
   {
     path: '/admin',
     name: 'Admin',
-    component: Admin,
+    component: () => import('../views/Admin.vue'),
     meta: {
       requiresAuth: true
     }
