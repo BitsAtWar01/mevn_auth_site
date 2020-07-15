@@ -84,8 +84,8 @@ const mutations = {
         state.errors = null;
     },
     auth_error(state, err){
-        console.log(err.response.data.errors);
         state.errors = err.response.data.errors;
+        setTimeout(() => { state.errors = null }, 5000);
     },
     register_request(state){
         state.errors = null;
@@ -96,8 +96,8 @@ const mutations = {
         state.status = 'success';
     },
     register_error(state, err){
-        console.log(err.response.data.errors);
         state.errors = err.response.data.errors;
+        setTimeout(() => { state.errors = null }, 5000);
     },
     logout(state){
         state.errors = null;

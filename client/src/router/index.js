@@ -4,7 +4,8 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
-// import Profile from '../views/Profile.vue'
+import Profile from '../views/Profile.vue'
+import Admin from '../views/Admin.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -23,12 +24,34 @@ Vue.use(VueRouter)
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
+    component: Register,
+    meta: {
+      requiresGuest: true
+    }
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin,
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

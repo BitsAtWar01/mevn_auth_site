@@ -4,8 +4,8 @@
      <br>
      <br>
      <div class="container">
-       <Errors v-if="errors" :errors="errors"/>
        <router-view/>
+       <Errors class="mt-3" :errors="errors"/>
      </div>
   </div>
 </template>
@@ -26,5 +26,5 @@ export default {
 </script>
 
 <style>
-
+  
 </style>

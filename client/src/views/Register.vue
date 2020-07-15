@@ -1,67 +1,70 @@
 <template>
     <div>
-        <h1 class="text-center text-muted">Register as a New User</h1>
+        <h1 class="text-center text-muted">Register as a New Wanderling</h1>
         <div class="row">
-            <div class="card mx-auto">
-                <div class="card-header text-white bg-primary">
-                    <h4>Register</h4>
-                </div>
-                <div class="card-body">
-                    <form @submit.prevent="registerUser">
-                        <div class="form-group">
-                            <label for="username">Username: </label>
-                            <input 
-                                id="username"
-                                type="text"
-                                class="form-control"
-                                placeholder="Username"
-                                v-model="username"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Name: </label>
-                            <input 
-                                id="name"
-                                type="text"
-                                class="form-control"
-                                placeholder="Name"
-                                v-model="name"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email: </label>
-                            <input 
-                                id="email"
-                                type="email"
-                                class="form-control"
-                                placeholder="Email"
-                                v-model="email"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password: </label>
-                            <input 
-                                id="password"
-                                type="password"
-                                class="form-control"
-                                placeholder="Password"
-                                v-model="password"
-                            />
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm_password">Confirm Password: </label>
-                            <input 
-                                id="confirm_password"
-                                type="password"
-                                class="form-control"
-                                placeholder=" Confirm Password"
-                                v-model="confirm_password"
-                            />
-                        </div>
-                        <input type="submit" class="btn btn-primary" value="Register">
-                        &nbsp;&nbsp;&nbsp;
-                        <router-link to="/login">Already have an account?</router-link>
-                    </form>
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <div class="card mb-2">
+                    <div class="card-header text-white bg-dark">
+                        <h4>Register</h4>
+                    </div>
+                    <div class="card-body">
+                        <form @submit.prevent="registerUser">
+                            <div class="form-group">
+                                <label for="username">Username: </label>
+                                <input 
+                                    id="username"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Username"
+                                    v-model="username"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Name: </label>
+                                <input 
+                                    id="name"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="Name"
+                                    v-model="name"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email: </label>
+                                <input 
+                                    id="email"
+                                    type="email"
+                                    class="form-control"
+                                    placeholder="Email"
+                                    v-model="email"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password: </label>
+                                <input 
+                                    id="password"
+                                    type="password"
+                                    class="form-control"
+                                    placeholder="Password"
+                                    v-model="password"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_password">Confirm Password: </label>
+                                <input 
+                                    id="confirm_password"
+                                    type="password"
+                                    class="form-control"
+                                    placeholder=" Confirm Password"
+                                    v-model="confirm_password"
+                                />
+                            </div>
+                            <input type="submit" class="btn btn-dark" value="Register">
+                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;
+                            <router-link to="/login" class="float-right"><small class="text-muted">Already Have an Account?</small></router-link>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -102,7 +105,7 @@ export default {
 </script>
 
 <style scoped>
-    .card {
-        width: 60%;
+    .card, .btn, .form-control, .card-header {
+        border-radius: 0;
     }
 </style>
