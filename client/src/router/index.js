@@ -38,13 +38,14 @@ Vue.use(VueRouter)
     meta: {
       requiresAuth: true
     }
-  },
+  }
+  ,
   {
     path: '/admin',
     name: 'Admin',
     component: () => import('../views/Admin.vue'),
     meta: {
-      requiresAuth: true
+      requiresGuest: true
     }
   }
 ]
