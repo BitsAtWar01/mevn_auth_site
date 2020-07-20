@@ -1,10 +1,12 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const passport = require('passport');
+const { connect } = require('mongoose');
+const { success, error } = require('consola');
 
+const { DB, PORT } = require('./config/index');
 
 //Initialize the app
 const app = express();
@@ -24,18 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 //Use Passport Middleware
 app.use(passport.initialize());
 
-//Import Database Config
-const db = require('./config/keys').mongoURI;
 
-//Connect Database
-mongoose.connect(db, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log(`Database connected successfully ${db}`)
-}).catch(err =>{
-    console.log(`Unable to connect to the database ${err}`)
-});
 
 //Bring In User Routes
 const userRoutes = require('./routes/api/users');
@@ -47,9 +38,34 @@ app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-const PORT = process.env.PORT || 3000 ;
 
-//Listen on Port
-app.listen(PORT, () => {
-    console.log(`Server Listening on port ${PORT}`)
-})
+
+//Connection with the DB
+const startApp = async () => {
+    try {
+        await connect(DB, {
+            useFindAndModify: true,
+            useUnifiedTopology: true,
+            useNewUrlParser: true
+        })
+        success({
+            message: `Successfully connected to the Database: \n${DB}`,
+            badge: true
+        });
+        //Start listening for the server on port
+        app.listen(PORT, () => {
+            success({
+                message: `Server started on port ${PORT}`,
+                badge: true
+            });
+        });
+    } catch (err) {
+        error({
+            message: `Unable to connect to Database: \n${err}`,
+            badge: true
+        })
+        startApp();
+    }
+}
+
+startApp();

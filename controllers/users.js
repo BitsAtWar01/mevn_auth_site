@@ -1,7 +1,7 @@
 const User = require('../models/user');
-const bcrypt = require('bcryptjs');
+const { compare, genSalt, hash } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const key = require('../config/keys').secret;
+const { SECRET } = require('../config/index');
 const { body, validationResult } = require('express-validator');
 
 //Server Side Validation
@@ -57,7 +57,7 @@ exports.validators = {
                 if(!user){
                     return Promise.reject('Woops! Username not Found.');
                 } else {
-                    return bcrypt.compare(value, user.password).then(isMatch => {
+                    return compare(value, user.password).then(isMatch => {
                         if(!isMatch){
                             return Promise.reject('Yikes! Incorrect Password');
                         }
@@ -88,8 +88,8 @@ exports.createUser = (req,res, next) => {
         email: req.body.email
     })
     //Hash the password after generating a salt
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
+    genSalt(10, (err, salt) => {
+        hash(newUser.password, salt, (err, hash) => {
             if(err) throw err;
             else newUser.password = hash;
             newUser.save().then(user => {
@@ -122,7 +122,7 @@ exports.loginUser = (req, res, next) => {
             name: user.name,
             email: user.email
         }
-        jwt.sign(payload, key, {
+        jwt.sign(payload, SECRET, {
             expiresIn: 604800
         }, (err, token) => {
             res.status(200).json({
@@ -173,8 +173,8 @@ exports.createAdmin = (req,res, next) => {
         admin: req.body.admin
     })
     //Hash the password after generating a salt
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
+    genSalt(10, (err, salt) => {
+        hash(newUser.password, salt, (err, hash) => {
             if(err) throw err;
             else newUser.password = hash;
             newUser.save().then(user => {
