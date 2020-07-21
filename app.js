@@ -25,8 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //Use Passport Middleware
 app.use(passport.initialize());
-
-
+require('./middlewares/passport')(passport);
 
 //Bring In User Routes
 const userRoutes = require('./routes/api/users');

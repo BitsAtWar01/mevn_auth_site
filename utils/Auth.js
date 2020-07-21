@@ -3,9 +3,10 @@ const { compare, genSalt, hash } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('../config/index');
 const { body, validationResult } = require('express-validator');
+const passport = require('passport');
 
 //Server Side Validation
-exports.validators = {
+const validators = {
     register: [
 
         body('email')
@@ -65,97 +66,13 @@ exports.validators = {
                 }
             })
         })
-
     ]
 }
 
-//PUBLIC CONTROLLERS
-//Create User Controller
-exports.createUser = (req,res, next) => {
-    //Validation Errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ 
-            errors: errors.array() 
-        });
-    }
-
-    // The data is valid & now we can Register the User
-    let newUser = new User({
-        name: req.body.name,
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email
-    })
-    //Hash the password after generating a salt
-    genSalt(10, (err, salt) => {
-        hash(newUser.password, salt, (err, hash) => {
-            if(err) throw err;
-            else newUser.password = hash;
-            newUser.save().then(user => {
-                return res.status(201).json({
-                    success: true,
-                    msg: "Yay! User is now registered."
-                });
-            }).catch(err => {
-                console.log(err);
-            })
-        })
-    })
-}
-
-//Login User Controller
-exports.loginUser = (req, res, next) => {
-    //Validation Errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ 
-            errors: errors.array() 
-        });
-    }
-    //Password is correct and user can Login
-    User.findOne({username: req.body.username})
-    .then(user => {
-        const payload = {
-            _id: user._id,
-            username: user.username,
-            name: user.name,
-            email: user.email
-        }
-        jwt.sign(payload, SECRET, {
-            expiresIn: 604800
-        }, (err, token) => {
-            res.status(200).json({
-                success: true,
-                token: `Bearer ${token}`,
-                user: user,
-                msg: "Yay! You are now Loggeg in."
-            })
-        });
-    }, (err) => next(err))
-    .catch(err => next(err));
-}
-
-//PRIVATE CONTROLLERS
-//Get Profile of User Controller
-exports.getUser = (req, res, next) => {
-    //Send User
-    return res.json({
-        user: req.user
-    })
-}
-
-//Delete user private Controller
-exports.deleteUserPrivate = (req, res, next) => {
-    User.deleteOne({_id: req.user._id}).then(resp => {
-        res.status(200).json(resp)
-    }, err => next(err))
-    .catch(err => next(err));
-}
-
-//ADMIN CONTROLLERS
-//Create Admin Account
-exports.createAdmin = (req,res, next) => {
+/**
+ * @DESC To register the user (ADMIN, SUPER_ADMIN, USER)
+ */
+const userRegister = async (req, res, role) => {
     //Validation Errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -170,7 +87,7 @@ exports.createAdmin = (req,res, next) => {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
-        admin: req.body.admin
+        role
     })
     //Hash the password after generating a salt
     genSalt(10, (err, salt) => {
@@ -189,25 +106,75 @@ exports.createAdmin = (req,res, next) => {
     })
 }
 
-exports.getUsers = (req, res, next) => {
-    User.find({}).then(users => {
-        res.status(200).json(users);
-    }, err => next(err))
-    .catch(err => next(err));
+/**
+ * @DESC To login the user (ADMIN, SUPER_ADMIN, USER)
+ */
+const userLogin = async (req, res, role) => {
+    //Validation Errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ 
+            errors: errors.array() 
+        });
+    }
+    //Password is correct and user can Login
+    const user = await User.findOne({username: req.body.username})
+
+    if(user.role !== role){
+        return res.status(403).json({
+            message: 'Please make sure you\'re logging in from the right portal.',
+            success: false
+        });
+    }
+
+    const payload = {
+        _id: user._id,
+        username: user.username,
+        name: user.name,
+        email: user.email
+    }
+    jwt.sign(payload, SECRET, {
+        expiresIn: "7 days"
+    }, (err, token) => {
+        res.status(200).json({
+            success: true,
+            token: `Bearer ${token}`,
+            user: user,
+            msg: "Yay! You are now Loggeg in."
+        })
+    });
+
 }
 
-//Delete user admin controller
-exports.deleteUserAdmin = (req, res, next) => {
-    User.deleteOne({_id: req.params.user_id}).then(resp => {
-        res.status(200).json(resp)
-    }, err => next(err))
-    .catch(err => next(err));
+/**
+ * @DESC Passport middleware
+ */
+
+const userAuth = passport.authenticate('jwt', {session: false});
+
+/**
+ * 
+ * @DESC Check the Role Middleware
+ */
+
+const checkRole = roles => (req, res, next) => !roles.includes(req.user.role) ? res.status(401).json("Unauthorized") : next();
+
+const serializeUser = user => {
+    return {
+        username: user.username,
+        email: user.email,
+        name: user.name,
+        _id: user._id,
+        updatedAt: user._id,
+        createdAt: user.createdAt
+    }
 }
 
-//Delete all Users Controller
-exports.deleteUsers = (req, res, next) => {
-    User.deleteMany({}).then(resp => {
-        res.status(200).json(resp)
-    }, err => next(err))
-    .catch(err => next(err));
+module.exports = {
+    validators,
+    userLogin,
+    userRegister,
+    serializeUser,
+    checkRole,
+    userAuth
 }
