@@ -19,10 +19,10 @@ const actions = {
     //Login Actions 
     async login({
         commit
-    }, user) {
+    }, payload) {
         commit('auth_request');
         try {
-            let res = await axios.post('/api/users/login', user);
+            let res = await axios.post('/api/users/login-' + payload.role, payload.user);
             if(res.data.success){
                 const token = res.data.token;
                 const user = res.data.user;
@@ -39,10 +39,10 @@ const actions = {
     },
     async register({
         commit
-    }, userData) {
+    }, payload) {
         try {
             commit('register_request');
-            let res = await axios.post('/api/users/register', userData);
+            let res = await axios.post('/api/users/register-' + payload.role, payload.user);
             if(res.data.success !== undefined) {
                 commit('register_success');
             }

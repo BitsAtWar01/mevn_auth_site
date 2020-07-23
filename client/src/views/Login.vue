@@ -59,7 +59,7 @@ export default {
                 username: this.username,
                 password: this.password
             };
-            this.login(user)
+            this.login({user: user, role: "user"})
             .then(res => {
                 if(res.data.success){
                     this.$router.push('/profile');

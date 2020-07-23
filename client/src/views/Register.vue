@@ -93,7 +93,7 @@ export default {
                 email: this.email,
                 name: this.name
             }
-            this.register(user)
+            this.register({user: user, role: 'user'})
             .then(res => {
                 if(res.data.success){
                     this.$router.push('/login');

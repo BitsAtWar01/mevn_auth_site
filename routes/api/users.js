@@ -43,7 +43,7 @@ router.get("/admin-protected", userAuth, checkRole(['admin', 'superadmin']), asy
 });
 
 //Super Admin Protected Route
-router.get("/super-admin-protected", userAuth, checkRole(['superadmin']), async (req, res) => {
+router.get("/superadmin-protected", userAuth, checkRole(['superadmin']), async (req, res) => {
     return res.json("Hello World");
 });
 
