@@ -14,7 +14,7 @@
           <router-link to="/about" class="nav-link" href="#">About</router-link>
         </li>
         <li class="nav-item" v-if="!isLoggedIn">
-          <router-link to="/login" class="nav-link" href="#">Login</router-link>
+          <router-link :to="{name: 'Login', params: {role: 'user'}}" class="nav-link" href="#">Login</router-link>
         </li>
         <li class="nav-item" v-if="!isLoggedIn">
           <router-link to="/register" class="nav-link" href="#">Register</router-link>

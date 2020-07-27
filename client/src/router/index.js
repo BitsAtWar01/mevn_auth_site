@@ -21,7 +21,8 @@ Vue.use(VueRouter)
     component: () => import('../views/Login.vue'),
     meta: {
       requiresGuest: true
-    }
+    },
+    props: true
   },
   {
     path: '/register',

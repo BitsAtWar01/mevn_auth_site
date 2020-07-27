@@ -5,7 +5,7 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <div class="card mb-2">
                     <div class="card-header text-white bg-dark">
-                        <h4>Login</h4>
+                        <h4>Hey {{ this.role }}! Please Login</h4>
                     </div>
                     <div class="card-body">
                         <form @submit.prevent="loginUser">
@@ -46,6 +46,7 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
+    props: ['role'],
     data(){
         return{
             username: "",
@@ -59,7 +60,7 @@ export default {
                 username: this.username,
                 password: this.password
             };
-            this.login({user: user, role: "user"})
+            this.login({user: user, role: this.role})
             .then(res => {
                 if(res.data.success){
                     this.$router.push('/profile');
@@ -68,6 +69,10 @@ export default {
                 console.log(err);
             })
         }
+    },
+    created() {
+        console.log('CREATED: ');
+        console.log(this.role);   
     }
 }
 </script>
