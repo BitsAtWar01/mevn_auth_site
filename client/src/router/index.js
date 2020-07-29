@@ -47,6 +47,14 @@ Vue.use(VueRouter)
     meta: {
       requiresGuest: true
     }
+  },
+  {
+    path: '/request',
+    name: 'Request',
+    component: () => import('../views/Request.vue'),
+    meta: {
+      requiresGuest: true
+    }
   }
 ]
 

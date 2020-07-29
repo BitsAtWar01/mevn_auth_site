@@ -34,7 +34,7 @@
                             <input type="submit" class="btn btn-dark" value="Login">
                             &nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;
-                            <router-link to="/register" class="float-right"><small class="text-muted">Don't have an account?</small></router-link>
+                            <router-link v-if="role==='user'" to="/register" class="float-right"><small class="text-muted">Don't have an account?</small></router-link>
                         </form>
                     </div>
                 </div>
@@ -46,7 +46,12 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
-    props: ['role'],
+    props:{
+        role: {
+            type: String,
+            default: 'user'
+        }
+    },
     data(){
         return{
             username: "",
@@ -69,10 +74,6 @@ export default {
                 console.log(err);
             })
         }
-    },
-    created() {
-        console.log('CREATED: ');
-        console.log(this.role);   
     }
 }
 </script>
