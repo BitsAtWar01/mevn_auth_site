@@ -4,23 +4,22 @@
      <br>
      <br>
      <div class="container">
+       <Alert class="mt-3"/>
+       <Errors class="mt-3"/>
        <router-view/>
-       <Errors class="mt-3" :errors="errors"/>
      </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import Alert from './components/Alert.vue'
 import Navbar from './components/Navbar.vue'
 import Errors from './components/Errors.vue'
 export default {
   components: {
+    Alert,
     Navbar,
     Errors
-  },
-  computed: {
-    ...mapGetters(['errors'])
   }
 }
 </script>

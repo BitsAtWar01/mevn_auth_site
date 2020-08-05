@@ -1,19 +1,19 @@
 <template>
     <transition name='fade' appear mode="out-in">
-        <div v-if="errors">
-            <h3 class="text-danger">Errors:</h3>
-            <ul class="list-group">
-                <li class="list-group-item list-group-item-danger" v-for="error in errors" :key="error.msg">{{ error.msg }}</li>
-            </ul>
+        <div v-if="alert">
+            <h3 class="text-success">Alert:</h3>
+            <div class="alert alert-success" role="alert">
+                {{alert}}
+            </div>
         </div>
     </transition>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-export default {
+export default{
   computed: {
-    ...mapGetters(['errors'])
+    ...mapGetters(['alert'])
   }
 }
 </script>
