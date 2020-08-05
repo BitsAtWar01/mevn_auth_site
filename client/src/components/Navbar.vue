@@ -23,7 +23,7 @@
           <router-link to="/profile" class="nav-link" href="#">Profile</router-link>
         </li>
         <li class="nav-item" v-if="isLoggedIn">
-          <a to="/logout" @click.prevent="logoutUser" class="nav-link" href="#">Logout</a>
+          <a to="/logout" @click.prevent="logoutUser(); isOnSettingsTab = false" class="nav-link" href="#">Logout</a>
         </li>
         <li class="nav-item" v-if="!isLoggedIn && isOnSettingsTab">
           <router-link to="/" @click.native="isOnSettingsTab=false" class="nav-link btn btn-light text-dark" href="#">Go Back</router-link>
@@ -63,5 +63,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+   .btn{
+        border-radius: 0;
+    }
 </style>

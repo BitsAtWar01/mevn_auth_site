@@ -43,17 +43,17 @@
                                 Role:
                                 <br>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="role" id="admin" value="admin">
+                                    <input class="form-check-input" type="radio" name="role" id="admin" value="admin" v-model="role">
                                     <label class="form-check-label" for="admin">Admin</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="role" id="superadmin" value="superadmin">
+                                    <input class="form-check-input" type="radio" name="role" id="superadmin" value="superadmin" v-model="role">
                                     <label class="form-check-label" for="superadmin">Superadmin</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="request-body">Why do you think you are capable for the role?</label>
-                                <textarea class="form-control rounded-0" id="request-body" rows="3"></textarea>
+                                <textarea placeholder="Your reason..." class="form-control rounded-0" id="request-body" rows="3" v-model="reason"></textarea>
                             </div>
                             <input type="submit" class="btn btn-dark" value="Request">
                         </form>
@@ -65,10 +65,35 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
+    data(){
+        return{
+            username: "",
+            name: "",
+            email: "",
+            role: "admin",
+            reason: ""
+        }
+    },
     methods: {
-        requestUser() {
-            console.log('Under Construction!');
+        ...mapActions(['request']),
+        async requestUser() {
+            const requestData = {
+                username: this.username,
+                name: this.name,
+                email: this.email,
+                role: this.role,
+                reason: this.reason
+            }
+            this.request(requestData)
+            .then(res => {
+                if(res.data.success){
+                    this.$router.push('/settings');
+                }
+            }).catch(err => {
+                console.log(err)
+            })
         }
     },
 }

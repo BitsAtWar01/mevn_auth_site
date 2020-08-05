@@ -6,7 +6,8 @@ const {
     userRegister,
     serializeUser,
     checkRole,
-    userAuth
+    userAuth,
+    userRequest
 } = require('../../utils/Auth');
 
 //User Registeration Route
@@ -30,6 +31,11 @@ router.post('/login-superadmin', validators['login'], async (req, res) => await 
 //Profile Route
 router.get('/profile', userAuth, (req, res) => {
     return res.json(serializeUser(req.user));
+})
+
+//Request for admin/superadmin access
+router.post('/request', validators['request'], async (req, res) => {
+    await userRequest(req, res);
 })
 
 //User Protected Route

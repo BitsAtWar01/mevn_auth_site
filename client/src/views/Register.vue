@@ -47,6 +47,7 @@
                                     class="form-control"
                                     placeholder="Password"
                                     v-model="password"
+                                    autocomplete="on"
                                 />
                             </div>
                             <div class="form-group">
@@ -57,6 +58,7 @@
                                     class="form-control"
                                     placeholder=" Confirm Password"
                                     v-model="confirm_password"
+                                    autocomplete="on"
                                 />
                             </div>
                             <input type="submit" class="btn btn-dark" value="Register">

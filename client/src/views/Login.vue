@@ -29,6 +29,7 @@
                                     placeholder="Password"
                                     name="password"
                                     v-model="password"
+                                    autocomplete="on"
                                 />
                             </div>
                             <input type="submit" class="btn btn-dark" value="Login">
@@ -68,7 +69,11 @@ export default {
             this.login({user: user, role: this.role})
             .then(res => {
                 if(res.data.success){
-                    this.$router.push('/profile');
+                    if(this.role === "user"){
+                        this.$router.push('/profile');
+                    } else {
+                        this.$router.push('/dashboard');
+                    }
                 }
             }).catch(err => {
                 console.log(err);

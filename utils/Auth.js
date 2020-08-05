@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Request = require('../models/request');
 const { compare, genSalt, hash } = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('../config/index');
@@ -43,7 +44,6 @@ const validators = {
                 }
                 return true;
             })
-
     ],
 
     login: [
@@ -54,10 +54,13 @@ const validators = {
         .matches(/\d/)
         .withMessage('Uh Oh! Password must contain a number')
         .custom((value, { req }) => {
+            const role = req.path.slice(7);
             return User.findOne({username: req.body.username}).then(user => {
                 if(!user){
                     return Promise.reject('Woops! Username not Found.');
-                } else {
+                } else if (user.role !== role){
+                    return Promise.reject('Please make sure you\'re logging in from the right portal.');
+                }else {
                     return compare(value, user.password).then(isMatch => {
                         if(!isMatch){
                             return Promise.reject('Yikes! Incorrect Password');
@@ -66,6 +69,48 @@ const validators = {
                 }
             })
         })
+    ],
+
+
+    request: [
+        body('email')
+            .isEmail()
+            .withMessage('Hey! Your Email ID must be in proper email format')
+            .custom((value) => {
+                return User.findOne({email: value}).then(user => {
+                    if(user){
+                        return Promise.reject('Yikes! Email is already registered. Did you forget your password?');
+                    }
+                })
+            })
+            .custom((value) => {
+                return Request.findOne({email: value}).then(user => {
+                    if(user){
+                        return Promise.reject('Yikes! You\'ve already requested with this email. We\'ll get to you soon!');
+                    }
+                })
+            }),
+
+        body('username')
+            .trim()
+            .custom((value) => {
+                return User.findOne({username: value}).then(user => {
+                    if(user){
+                        return Promise.reject('Oops! You\'ve already requested with this username. We\'ll get to you soon!');
+                    }
+                })
+            })
+            .custom((value) => {
+                return Request.findOne({username: value}).then(user => {
+                    if(user){
+                        return Promise.reject('Oops! Username is already taken.');
+                    }
+                })
+            }),
+
+        body('reason')
+            .not().isEmpty()
+            .withMessage('Come on! Your reason is required')
     ]
 }
 
@@ -120,13 +165,6 @@ const userLogin = async (req, res, role) => {
     //Password is correct and user can Login
     const user = await User.findOne({username: req.body.username})
 
-    if(user.role !== role){
-        return res.status(403).json({
-            message: 'Please make sure you\'re logging in from the right portal.',
-            success: false
-        });
-    }
-
     const payload = {
         _id: user._id,
         username: user.username,
@@ -144,6 +182,27 @@ const userLogin = async (req, res, role) => {
         })
     });
 
+}
+
+/**
+ * @DESC To log request from the user (ADMIN, SUPER_ADMIN)
+ */
+const userRequest = (req, res) => {
+    //Validation Errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ 
+            errors: errors.array() 
+        });
+    }
+    Request.create(req.body).then(request => {
+        return res.status(201).json({
+            success: true,
+            msg: "Yay! Your request has now been recorded."
+        });
+    }).catch(err => {
+        console.log(err);
+    })
 }
 
 /**
@@ -176,5 +235,6 @@ module.exports = {
     userRegister,
     serializeUser,
     checkRole,
-    userAuth
+    userAuth,
+    userRequest
 }
