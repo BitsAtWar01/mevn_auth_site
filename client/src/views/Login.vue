@@ -5,7 +5,7 @@
             <div class="col-lg-6 col-md-8 mx-auto">
                 <div class="card mb-2">
                     <div class="card-header text-white bg-dark">
-                        <h4>Login</h4>
+                        <h4>Hey {{ this.role }}! Please Login</h4>
                     </div>
                     <div class="card-body">
                         <form @submit.prevent="loginUser">
@@ -29,12 +29,13 @@
                                     placeholder="Password"
                                     name="password"
                                     v-model="password"
+                                    autocomplete="on"
                                 />
                             </div>
                             <input type="submit" class="btn btn-dark" value="Login">
                             &nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;
-                            <router-link to="/register" class="float-right"><small class="text-muted">Don't have an account?</small></router-link>
+                            <router-link v-if="role==='user'" to="/register" class="float-right"><small class="text-muted">Don't have an account?</small></router-link>
                         </form>
                     </div>
                 </div>
@@ -46,6 +47,12 @@
 <script>
 import { mapActions } from 'vuex';
 export default {
+    props:{
+        role: {
+            type: String,
+            default: 'user'
+        }
+    },
     data(){
         return{
             username: "",
@@ -59,10 +66,14 @@ export default {
                 username: this.username,
                 password: this.password
             };
-            this.login(user)
+            this.login({user: user, role: this.role})
             .then(res => {
                 if(res.data.success){
-                    this.$router.push('/profile');
+                    if(this.role === "user"){
+                        this.$router.push('/profile');
+                    } else {
+                        this.$router.push('/dashboard');
+                    }
                 }
             }).catch(err => {
                 console.log(err);

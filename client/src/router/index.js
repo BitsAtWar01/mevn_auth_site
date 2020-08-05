@@ -21,7 +21,8 @@ Vue.use(VueRouter)
     component: () => import('../views/Login.vue'),
     meta: {
       requiresGuest: true
-    }
+    },
+    props: true
   },
   {
     path: '/register',
@@ -40,11 +41,19 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/admin',
-    name: 'Admin',
-    component: () => import('../views/Admin.vue'),
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('../views/Settings.vue'),
     meta: {
-      requiresAuth: true
+      requiresGuest: true
+    }
+  },
+  {
+    path: '/request',
+    name: 'Request',
+    component: () => import('../views/Request.vue'),
+    meta: {
+      requiresGuest: true
     }
   }
 ]

@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d217357"],{c66d:function(e,t,n){"use strict";n.r(t);var s=function(){var e=this,t=e.$createElement;e._self._c;return e._m(0)},c=[function(){var e=this,t=e.$createElement,n=e._self._c||t;return n("div",[n("h1",{staticClass:"text-muted"},[e._v("This is your Wanderland")])])}],r=n("2877"),u={},a=Object(r["a"])(u,s,c,!1,null,null,null);t["default"]=a.exports}}]);
-//# sourceMappingURL=chunk-2d217357.196e59dc.js.map

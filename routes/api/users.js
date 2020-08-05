@@ -1,69 +1,56 @@
-const express = require('express');
-const router = express.Router();
-const passport = require('passport');
-const authenticate = require('../../config/passport')
-//User Controller
-const userController = require('../../controllers/users');
+const router = require('express').Router();
+//Bring in User Registeration Function
+const {
+    validators,
+    userLogin,
+    userRegister,
+    serializeUser,
+    checkRole,
+    userAuth,
+    userRequest
+} = require('../../utils/Auth');
 
-//PUBLIC ROUTES
-/**
- * @route POST api/users/register
- * @desc Register the user
- * @access Public
- */
-router.post('/register', userController.validators['register'], userController.createUser)
+//User Registeration Route
+router.post('/register-user', validators['register'], async (req, res) => await userRegister(req, res, 'user'))
 
-/**
- * @route POST api/users/login
- * @desc Login the user
- * @access Public
- */
-router.post('/login', userController.validators['login'], userController.loginUser)
+//Admin Registeration Route
+router.post('/register-admin', validators['register'], async (req, res) => await userRegister(req, res, 'admin'))
 
-//PRIVATE ROUTES
-/**
- * @route GET api/users/profile
- * @desc Display the User's Profile
- * @access Private
- */
-router.get('/profile', authenticate.verifyUser, userController.getUser)
+//Super Admin Registeration Route
+router.post('/register-superadmin', validators['register'], async (req, res) => await userRegister(req, res, 'superadmin'))
 
-/**
- * @route DELETE api/users/delete
- * @desc Delete Single User
- * @access Private
- */
-router.delete('/delete', authenticate.verifyUser, userController.deleteUserPrivate)
+//User Login Route
+router.post('/login-user', validators['login'], async (req, res) => await userLogin(req, res, 'user'))
 
+//Admin Login Route
+router.post('/login-admin', validators['login'], async (req, res) => await userLogin(req, res, 'admin'))
 
-//ADMIN ROUTES
+//Super Admin Login Route
+router.post('/login-superadmin', validators['login'], async (req, res) => await userLogin(req, res, 'superadmin'))
 
-/**
- * @route POST api/users/register
- * @desc Register the user
- * @access Public
- */
-router.post('/admin/register', userController.validators['register'], userController.createAdmin)
+//Profile Route
+router.get('/profile', userAuth, (req, res) => {
+    return res.json(serializeUser(req.user));
+})
 
-/**
- * @route GET api/users/
- * @desc Display All Users
- * @access Admin
- */
-router.get('/',authenticate.verifyUser, authenticate.verifyAdmin, userController.getUsers)
+//Request for admin/superadmin access
+router.post('/request', validators['request'], async (req, res) => {
+    await userRequest(req, res);
+})
 
-/**
- * @route DELETE api/users/delete
- * @desc Delete Single Users
- * @access Admin
- */
-router.delete('/:user_id',authenticate.verifyUser, authenticate.verifyAdmin, userController.deleteUserAdmin)
+//User Protected Route
+router.get("/user-protected", userAuth, checkRole(['user']), async (req, res) => {
+    return res.json("Hello World");
+});
 
-/**
- * @route DELETE api/users/
- * @desc Delete All Users
- * @access Admin
- */
-router.delete('/',authenticate.verifyUser, authenticate.verifyAdmin, userController.deleteUsers)
+//Admin Protected Route
+router.get("/admin-protected", userAuth, checkRole(['admin', 'superadmin']), async (req, res) => {
+    return res.json("Hello World");
+});
+
+//Super Admin Protected Route
+router.get("/superadmin-protected", userAuth, checkRole(['superadmin']), async (req, res) => {
+    return res.json("Hello World");
+});
 
 module.exports = router;
